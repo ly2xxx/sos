@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Emergency SOS</string>
+    <string name="police">Police</string>
+    <string name="ambulance">Ambulance</string>
+    <string name="fire">Fire Department</string>
+    <string name="general_emergency">General Emergency</string>
+    <string name="location_permission_denied">Location permission is required for emergency services</string>
+    <string name="call_permission_denied">Call permission is required to make emergency calls</string>
+    <string name="location_unavailable">Location services are not available</string>
+    <string name="emergency_call_failed">Emergency call failed</string>
+    <string name="country_detected">Country detected: %s</string>
+    <string name="emergency_number_unavailable">Emergency number not available</string>
+    <string name="calling_emergency">Calling emergency services...</string>
+</resources>
