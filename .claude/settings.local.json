@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(java:*)",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(apt:*)",
+      "Bash(apt install:*)",
+      "Bash(sudo apt:*)",
+      "Bash(sudo apt install:*)",
+      "Bash(echo $JAVA_HOME)",
+      "Bash(curl:*)",
+      "Bash(chmod:*)",
+      "Bash(mkdir:*)",
+      "Bash(tar:*)",
+      "Bash(export:*)",
+      "Bash(export PATH=$JAVA_HOME/bin:$PATH)",
+      "Bash(./gradlew:*)",
+      "Bash(sed:*)",
+      "Bash(unset GRADLE_OPTS)",
+      "Bash(unset:*)",
+      "Bash(rm:*)",
+      "Bash(unzip:*)",
+      "Bash(mv:*)",
+      "Bash(true)",
+      "Bash(python3:*)",
+      "Bash(cp:*)",
+      "Bash(timeout:*)",
+      "Bash(./build.sh:*)",
+      "Bash(git check-ignore:*)"
+    ],
+    "deny": []
+  }
+}
