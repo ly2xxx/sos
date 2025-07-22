@@ -2,6 +2,8 @@
 
 A comprehensive offline emergency app that provides location-based emergency contact numbers and direct calling functionality.
 
+![emergency sos app](image/README/1753222445575.jpg)
+
 ## Features
 
 - **🌍 Offline Functionality**: Works without internet connection using GPS coordinates

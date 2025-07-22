@@ -27,7 +27,8 @@
       "Bash(cp:*)",
       "Bash(timeout:*)",
       "Bash(./build.sh:*)",
-      "Bash(git check-ignore:*)"
+      "Bash(git check-ignore:*)",
+      "Bash(dos2unix:*)"
     ],
     "deny": []
   }
