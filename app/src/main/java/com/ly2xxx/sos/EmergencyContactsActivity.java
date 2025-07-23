@@ -41,38 +41,67 @@ public class EmergencyContactsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_emergency_contacts);
         
-        setupToolbar();
-        initViews();
-        loadEmergencyContacts();
-        setupRecyclerView();
-        setupSearch();
+        try {
+            setContentView(R.layout.activity_emergency_contacts);
+            
+            setupToolbar();
+            initViews();
+            loadEmergencyContacts();
+            setupRecyclerView();
+            setupSearch();
+            
+        } catch (Exception e) {
+            Log.e(TAG, "Error in onCreate", e);
+            Toast.makeText(this, "Error loading emergency contacts page", Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
     private void setupToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            if (getSupportActionBar() != null) {
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                getSupportActionBar().setTitle("Emergency Contacts");
+        try {
+            Toolbar toolbar = findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                setSupportActionBar(toolbar);
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                    getSupportActionBar().setTitle("Emergency Contacts");
+                }
+            } else {
+                Log.w(TAG, "Toolbar not found in layout");
             }
+        } catch (Exception e) {
+            Log.e(TAG, "Error setting up toolbar", e);
         }
     }
 
     private void initViews() {
-        recyclerView = findViewById(R.id.recycler_view);
-        searchEditText = findViewById(R.id.search_edit_text);
-        
-        if (recyclerView == null || searchEditText == null) {
-            Log.e(TAG, "Critical views not found in layout");
+        try {
+            recyclerView = findViewById(R.id.recycler_view);
+            searchEditText = findViewById(R.id.search_edit_text);
+            
+            if (recyclerView == null) {
+                Log.e(TAG, "RecyclerView not found in layout");
+                Toast.makeText(this, "Layout error: RecyclerView missing", Toast.LENGTH_LONG).show();
+                finish();
+                return;
+            }
+            
+            if (searchEditText == null) {
+                Log.e(TAG, "SearchEditText not found in layout");
+                Toast.makeText(this, "Layout error: Search field missing", Toast.LENGTH_LONG).show();
+                finish();
+                return;
+            }
+            
+            allContacts = new ArrayList<>();
+            filteredContacts = new ArrayList<>();
+            
+        } catch (Exception e) {
+            Log.e(TAG, "Error initializing views", e);
+            Toast.makeText(this, "Error initializing interface", Toast.LENGTH_LONG).show();
             finish();
-            return;
         }
-        
-        allContacts = new ArrayList<>();
-        filteredContacts = new ArrayList<>();
     }
 
     private void loadEmergencyContacts() {
@@ -209,10 +238,18 @@ public class EmergencyContactsActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView() {
-        if (recyclerView != null && filteredContacts != null) {
-            adapter = new EmergencyContactAdapter(filteredContacts);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(adapter);
+        try {
+            if (recyclerView != null && filteredContacts != null) {
+                adapter = new EmergencyContactAdapter(filteredContacts);
+                recyclerView.setLayoutManager(new LinearLayoutManager(this));
+                recyclerView.setAdapter(adapter);
+                Log.i(TAG, "RecyclerView setup completed with " + filteredContacts.size() + " items");
+            } else {
+                Log.e(TAG, "Cannot setup RecyclerView - recyclerView: " + (recyclerView != null) + ", filteredContacts: " + (filteredContacts != null));
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error setting up RecyclerView", e);
+            Toast.makeText(this, "Error loading emergency contacts list", Toast.LENGTH_LONG).show();
         }
     }
 

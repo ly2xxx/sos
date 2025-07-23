@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -80,8 +81,13 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         
         // Add navigation to Emergency Contacts page
         btnBrowseCountries.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, EmergencyContactsActivity.class);
-            startActivity(intent);
+            try {
+                Intent intent = new Intent(MainActivity.this, EmergencyContactsActivity.class);
+                startActivity(intent);
+            } catch (Exception e) {
+                Log.e("MainActivity", "Error starting EmergencyContactsActivity", e);
+                Toast.makeText(MainActivity.this, "Error opening emergency contacts page", Toast.LENGTH_LONG).show();
+            }
         });
     }
 
