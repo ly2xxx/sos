@@ -28,7 +28,8 @@
       "Bash(timeout:*)",
       "Bash(./build.sh:*)",
       "Bash(git check-ignore:*)",
-      "Bash(dos2unix:*)"
+      "Bash(dos2unix:*)",
+      "Bash(ldd:*)"
     ],
     "deny": []
   }

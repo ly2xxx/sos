@@ -67,38 +67,73 @@ download_file() {
 setup_java() {
     log_step "Setting up Java Development Kit"
     
+    # First try to use system Java if available
+    if command_exists java; then
+        local java_version_output=$(java -version 2>&1)
+        if echo "$java_version_output" | grep -q "17\|18\|19\|20\|21"; then
+            log_success "Using system Java"
+            echo "$java_version_output" | head -n 1
+            export JAVA_HOME=$(java -XshowSettings:properties 2>&1 | grep 'java.home' | sed 's/.*= //')
+            return 0
+        fi
+    fi
+    
+    # Try to install via package manager for WSL2/Ubuntu
+    if command_exists apt-get && [ -f /etc/debian_version ]; then
+        log_info "Attempting to install OpenJDK via package manager..."
+        if apt-get update >/dev/null 2>&1 && apt-get install -y openjdk-17-jdk >/dev/null 2>&1; then
+            log_success "Java 17 installed via package manager"
+            export JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
+            export PATH="$JAVA_HOME/bin:$PATH"
+            java -version 2>&1 | head -n 1
+            return 0
+        fi
+    fi
+    
+    # Fallback to manual installation
     local java_dir="$PROJECT_DIR/jdk-$JAVA_VERSION"
     local java_archive="openjdk17.tar.gz"
     
     if [ -d "$java_dir" ] && [ -x "$java_dir/bin/java" ]; then
         log_info "Java already installed at $java_dir"
-    else
-        log_info "Installing OpenJDK 17..."
-        download_file \
-            "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-${JAVA_VERSION}/OpenJDK17U-jdk_x64_linux_hotspot_${JAVA_VERSION/+/_}.tar.gz" \
-            "$java_archive" \
-            "OpenJDK 17"
-        
-        log_info "Extracting OpenJDK..."
-        tar -xzf "$java_archive"
-        rm "$java_archive"
-        
-        if [ ! -d "$java_dir" ]; then
-            log_error "Java extraction failed"
-            exit 1
+        # Test if the binary works
+        if "$java_dir/bin/java" -version >/dev/null 2>&1; then
+            export JAVA_HOME="$java_dir"
+            export PATH="$JAVA_HOME/bin:$PATH"
+            log_success "Using local Java installation"
+            return 0
+        else
+            log_warning "Local Java binary not working, removing..."
+            rm -rf "$java_dir"
         fi
+    fi
+    
+    log_info "Installing OpenJDK 17..."
+    download_file \
+        "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-${JAVA_VERSION}/OpenJDK17U-jdk_x64_linux_hotspot_${JAVA_VERSION/+/_}.tar.gz" \
+        "$java_archive" \
+        "OpenJDK 17"
+    
+    log_info "Extracting OpenJDK..."
+    tar -xzf "$java_archive"
+    rm "$java_archive"
+    
+    if [ ! -d "$java_dir" ]; then
+        log_error "Java extraction failed"
+        exit 1
     fi
     
     # Set Java environment
     export JAVA_HOME="$java_dir"
     export PATH="$JAVA_HOME/bin:$PATH"
     
-    # Verify Java installation
-    if java -version 2>&1 | grep -q "17.0.8.1"; then
+    # Verify Java installation with better error handling
+    if java -version >/dev/null 2>&1; then
         log_success "Java 17 configured successfully"
         java -version 2>&1 | head -n 1
     else
-        log_error "Java verification failed"
+        log_error "Java verification failed - binary may not be compatible with this system"
+        log_error "Consider installing Java manually: sudo apt-get install openjdk-17-jdk"
         exit 1
     fi
 }

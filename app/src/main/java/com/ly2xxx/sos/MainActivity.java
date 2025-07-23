@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     private Button btnAmbulance;
     private Button btnFire;
     private Button btnGeneral;
+    private Button btnBrowseCountries;
     private TextView tvStatus;
 
     private LocationService locationService;
@@ -69,12 +71,24 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         btnAmbulance = findViewById(R.id.btn_ambulance);
         btnFire = findViewById(R.id.btn_fire);
         btnGeneral = findViewById(R.id.btn_general);
+        btnBrowseCountries = findViewById(R.id.btn_browse_countries);
         tvStatus = findViewById(R.id.tv_status);
 
         btnPolice.setOnClickListener(v -> makeEmergencyCall("police"));
         btnAmbulance.setOnClickListener(v -> makeEmergencyCall("ambulance"));
         btnFire.setOnClickListener(v -> makeEmergencyCall("fire"));
         btnGeneral.setOnClickListener(v -> makeEmergencyCall("general"));
+        
+        // Add navigation to Emergency Contacts page
+        btnBrowseCountries.setOnClickListener(v -> {
+            try {
+                Intent intent = new Intent(MainActivity.this, EmergencyContactsActivity.class);
+                startActivity(intent);
+            } catch (Exception e) {
+                Log.e("MainActivity", "Error starting EmergencyContactsActivity", e);
+                Toast.makeText(MainActivity.this, "Error opening emergency contacts page", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void initServices() {
