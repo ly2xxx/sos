@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     private Button btnAmbulance;
     private Button btnFire;
     private Button btnGeneral;
+    private Button btnBrowseCountries;
     private TextView tvStatus;
 
     private LocationService locationService;
@@ -69,12 +70,19 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         btnAmbulance = findViewById(R.id.btn_ambulance);
         btnFire = findViewById(R.id.btn_fire);
         btnGeneral = findViewById(R.id.btn_general);
+        btnBrowseCountries = findViewById(R.id.btn_browse_countries);
         tvStatus = findViewById(R.id.tv_status);
 
         btnPolice.setOnClickListener(v -> makeEmergencyCall("police"));
         btnAmbulance.setOnClickListener(v -> makeEmergencyCall("ambulance"));
         btnFire.setOnClickListener(v -> makeEmergencyCall("fire"));
         btnGeneral.setOnClickListener(v -> makeEmergencyCall("general"));
+        
+        // Add navigation to Emergency Contacts page
+        btnBrowseCountries.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, EmergencyContactsActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void initServices() {
